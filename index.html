@@ -1,0 +1,153 @@
+﻿<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<!-- Mirrored from www.draw2d.org/draw2d_touch/jsdoc_6/draw2d/examples/code_snippets/shape_db/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2019 19:38:18 GMT -->
+
+<head>
+    <title></title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link type="text/css" rel="stylesheet" href="css/application.css" />
+
+    <link type="text/css" rel="stylesheet" href="css/contextmenu.css" />
+
+    <SCRIPT src="lib/shifty.js"></SCRIPT>
+    <SCRIPT src="lib/raphael.js"></SCRIPT>
+    <SCRIPT src="lib/jquery-1.12.0.min.js"></SCRIPT>
+    <SCRIPT src="lib/jquery.autoresize.js"></SCRIPT>
+    <SCRIPT src="lib/jquery-touch_punch.js"></SCRIPT>
+    <SCRIPT src="lib/jquery.contextmenu.js"></SCRIPT>
+    <SCRIPT src="lib/rgbcolor.js"></SCRIPT>
+    <SCRIPT src="lib/StackBlur.js"></SCRIPT>
+    <SCRIPT src="lib/canvg.js"></SCRIPT>
+    <SCRIPT src="lib/Class.js"></SCRIPT>
+    <SCRIPT src="lib/json2.js"></SCRIPT>
+    <SCRIPT src="lib/pathfinding-browser.min.js"></SCRIPT>
+
+
+    <SCRIPT src="lib/draw2d.js"></SCRIPT>
+
+    <SCRIPT src="lib/jquery.browser.js"></SCRIPT>
+    <SCRIPT src="lib/jquery-ui-1.8.23.custom.min.js"></SCRIPT>
+
+    <SCRIPT src="app/Application.js"></SCRIPT>
+    <SCRIPT src="app/View.js"></SCRIPT>
+    <SCRIPT src="app/Toolbar.js"></SCRIPT>
+    <SCRIPT src="app/TableShape.js"></SCRIPT>
+
+    <SCRIPT src="document.js"></SCRIPT>
+
+    <style>
+        .draw2d_InputPort {
+            fill: lightsalmon;
+            stroke: #d7d7d7;
+        }
+
+        .draw2d_OutputPort {
+            fill: lightgreen;
+            stroke: #d7d7d7;
+        }
+    </style>
+    <script type="text/javascript">
+
+        /**
+         * @method
+         * Factory method to provide a default connection for all drag&drop connections. You
+         * can override this method and customize this for your personal purpose.
+         * 
+         * @param {draw2d.Port} sourcePort port of the source of the connection
+         * @param {draw2d.Port} targetPort port of the target of the connection
+         * @template
+         * @returns {draw2d.Connection}
+         */
+        var app
+        $(window).load(function () {
+
+            var routerToUse = new draw2d.layout.connection.InteractiveManhattanConnectionRouter();
+            app = new example.Application();
+            app.view.installEditPolicy(new draw2d.policy.connection.DragConnectionCreatePolicy({
+                createConnection: function () {
+                    var connection = new draw2d.Connection({
+                        stroke: 3,
+                        outlineStroke: 1,
+                        outlineColor: "#303030",
+                        color: "91B93E",
+                        router: routerToUse
+                    });
+                    return connection;
+                }
+            }));
+
+
+            // unmarshal the JSON document into the canvas
+            // (load)
+            var reader = new draw2d.io.json.Reader();
+            reader.unmarshal(app.view, jsonDocument);
+
+        });
+
+        function ddd() {
+            var writer = new draw2d.io.json.Writer();
+            writer.marshal(app.view, function (json) {
+                // convert the json object into string representation
+                for (var i in json) {
+                    if (json[i].hasOwnProperty("ports")) {
+                        delete json[i].ports;
+                    }
+                }
+                var jsonTxt = JSON.stringify(json, null, 2);
+
+                // insert the json string into a DIV for preview or post
+                // it via ajax to the server....
+                console.log(jsonTxt)
+
+            });
+        }
+    </script>
+
+</head>
+
+<body id="container">
+
+    <div id="toolbar" class="navbar-default">
+    </div>
+
+    <div id="side-nav">
+        <span id="logo" onclick="ddd()">Draw2D</span>
+        <div id="layer_elements"></div>
+        <div id="layer_header" class="highlight panetitle blackgradient">
+            <div data-shape="TableShape" class="palette_node_element draw2d_droppable"
+                title="drag&amp;drop the table into the canvas..">Table</div>
+        </div>
+    </div>
+
+    <div id="canvas">
+    </div>
+</body>
+
+
+</html>
+<!-- <script>
+    var LabelConnection = draw2d.Connection.extend({
+
+        init: function (attr) {
+            this._super(attr);
+
+            // Create any Draw2D figure as decoration for the connection
+            //
+            this.label = new draw2d.shape.basic.Label({
+                text: "I'm a Label",
+                color: "#0d0d0d",
+                fontColor: "#0d0d0d",
+                bgColor: "#f0f0f0"
+            });
+
+            // add the new decoration to the connection with a position locator.
+            //
+            this.add(this.label, new draw2d.layout.locator.ManhattanMidpointLocator());
+
+            this.label.installEditor(new draw2d.ui.LabelInplaceEditor());
+        }
+    });
+</script> -->
